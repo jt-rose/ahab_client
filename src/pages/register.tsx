@@ -10,6 +10,7 @@ import { Wrapper } from '../components/Wrapper'
 import { InputField } from '../components/InputField'
 import { Box, Button } from '@chakra-ui/react'
 import { useRegisterMutation } from '../generated/graphql'
+import { toErrorMap } from '../utils/toErrorMap'
 
 interface registerProps {}
 
@@ -22,11 +23,10 @@ const Register: React.FC<registerProps> = ({}) => {
         onSubmit={async (values, { setErrors }) => {
           console.log(values)
           const res = await register(values)
-          /*if (res.data?.register.errors) {
-            setErrors(
-
-            )
-          }*/
+          const errors = res.data?.register.errors
+          if (errors) {
+            setErrors(toErrorMap(errors))
+          }
         }}
       >
         {({ isSubmitting }) => (
