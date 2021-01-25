@@ -1,6 +1,7 @@
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
 import { Provider, createClient } from 'urql'
 import theme from '../theme'
+import { NavBar } from '../components/NavBar'
 
 const client = createClient({
   url: 'http://localhost:5000/graphql',
@@ -18,6 +19,7 @@ function MyApp(props: { Component: any; pageProps: any }) {
             useSystemColorMode: true,
           }}
         >
+          <NavBar />
           <props.Component {...props.pageProps} />
         </ColorModeProvider>
       </ChakraProvider>
