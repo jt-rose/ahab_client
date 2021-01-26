@@ -19,9 +19,9 @@ const SignInLinks = () => (
 
 const SignOut = (props: { username: string }) => {
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation()
-  const [{ data, fetching }] = useFetchUserQuery({
+  const [{ data, fetching }] = useFetchUserQuery(/*{
     pause: isServer(),
-  })
+  }*/)
 
   return (
     <Flex>
