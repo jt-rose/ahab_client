@@ -6,6 +6,8 @@ import { Box, Button } from '@chakra-ui/react'
 import { useLoginMutation } from '../generated/graphql'
 import { toErrorMap } from '../utils/toErrorMap'
 import { useRouter } from 'next/router'
+import { withUrqlClient } from 'next-urql'
+import { createUrqlClient } from '../utils/createUrqlClient'
 
 interface registerProps {}
 
@@ -49,7 +51,7 @@ const Login: React.FC<registerProps> = ({}) => {
               type='submit'
               isLoading={isSubmitting}
             >
-              Register
+              Login
             </Button>
           </Form>
         )}
@@ -58,4 +60,4 @@ const Login: React.FC<registerProps> = ({}) => {
   )
 }
 
-export default Login
+export default withUrqlClient(createUrqlClient)(Login)

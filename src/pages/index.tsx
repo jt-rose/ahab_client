@@ -16,6 +16,23 @@ import { CTA } from '../components/CTA'
 import { Footer } from '../components/Footer'
 */
 
-const Index = () => <div>Hello world!</div>
+import { withUrqlClient } from 'next-urql'
+import { usePostsQuery } from '../generated/graphql'
+import { createUrqlClient } from '../utils/createUrqlClient'
 
-export default Index
+const Index = () => {
+  const [{ data }] = usePostsQuery()
+  return (
+    <div>
+      <h2>Hello world!</h2>
+      <br />
+      <ul>
+        {data?.posts.map((p, i) => (
+          <li key={p.title + '-' + i}>{p.title}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
+
+export default withUrqlClient(createUrqlClient, { ssr: true })(Index)
