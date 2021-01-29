@@ -1,4 +1,4 @@
-import { Box, Button } from '@chakra-ui/react'
+import { Box, Button, Flex, Link } from '@chakra-ui/react'
 import { Formik, Form } from 'formik'
 import { NextPage } from 'next'
 import { withUrqlClient } from 'next-urql'
@@ -10,6 +10,7 @@ import { Wrapper } from '../../components/Wrapper'
 import { useChangePasswordMutation } from '../../generated/graphql'
 import { createUrqlClient } from '../../utils/createUrqlClient'
 import { toErrorMap } from '../../utils/toErrorMap'
+import NextLink from 'next/link'
 
 interface PropsWthToken {
   token?: string
@@ -58,7 +59,16 @@ const ChangePassword: NextPage<PropsWthToken> = ({ token }) => {
                   type='password'
                 />
               </Box>
-              {tokenError && <Box color='red'>{tokenError}</Box>}
+              {tokenError && (
+                <Flex>
+                  <Box mr={2} style={{ color: 'red' }}>
+                    {tokenError}
+                  </Box>
+                  <NextLink href='/forgot-password'>
+                    <Link>forgot password</Link>
+                  </NextLink>
+                </Flex>
+              )}
               <Button
                 mt={4}
                 colorScheme='teal'
