@@ -19,11 +19,9 @@ export const Layout: React.FunctionComponent<LayoutProps> = ({
       <meta charSet='utf-8' />
       <meta name='viewport' content='initial-scale=1.0, width=device-width' />
     </Head>
-    <Wrapper variant={variant}>
-      <header>
-        <NavBar />
-      </header>
-      {children}
-    </Wrapper>
+    <header>
+      <NavBar />
+    </header>
+    <Wrapper variant={variant}>{children}</Wrapper>
   </div>
 )
