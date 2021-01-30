@@ -20,11 +20,17 @@ import { Layout } from '../components/Layout'
 import { withUrqlClient } from 'next-urql'
 import { usePostsQuery } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
+import NextLink from 'next/link'
+import { Link } from '@chakra-ui/react'
 
 const Index = () => {
   const [{ data }] = usePostsQuery()
   return (
     <Layout title='Home' variant='regular'>
+      <NextLink href='/create-post'>
+        <Link>Create Post</Link>
+      </NextLink>
+      <br />
       <div>
         <h2>Hello world!</h2>
         <br />

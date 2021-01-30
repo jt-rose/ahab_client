@@ -1,23 +1,28 @@
 import { Box, Button } from '@chakra-ui/react'
 import { Formik, Form } from 'formik'
 import { withUrqlClient } from 'next-urql'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { InputField } from '../components/InputField'
 import { Layout } from '../components/Layout'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import { useCreatePostMutation } from '../generated/graphql'
 import { useRouter } from 'next/router'
+import { useIsAuth } from '../utils/useIsAuth'
 
+// note: in real app, add loading spinner while fetching for ux
 const CreatePost = () => {
   const router = useRouter()
+  useIsAuth()
   const [, createPost] = useCreatePostMutation()
   return (
     <Layout title='login' variant='small'>
       <Formik
         initialValues={{ title: '', text: '' }}
         onSubmit={async (values, {}) => {
-          await createPost(values)
-          router.push('/')
+          const { error } = await createPost(values)
+          if (!error) {
+            router.push('/')
+          }
         }}
       >
         {({ isSubmitting }) => (

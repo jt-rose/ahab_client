@@ -42,7 +42,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
   const username = data?.fetchUser?.username
 
   return (
-    <Flex bg='tan' p={4}>
+    <Flex position='sticky' top={0} zIndex={1} bg='tan' p={4}>
       <Box ml={'auto'}>
         {username ? <SignOut username={username} /> : <SignInLinks />}
       </Box>
