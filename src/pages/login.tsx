@@ -26,8 +26,12 @@ const Login: React.FC<registerProps> = ({}) => {
           if (errors) {
             setErrors(toErrorMap(errors))
           } else if (res.data?.login.user) {
-            router.push('/')
-          } else {
+            if (typeof router.query.next === 'string') {
+              // in full app, check against string literal routes
+              router.push(router.query.next)
+            } else {
+              router.push('/')
+            }
           }
         }}
       >
