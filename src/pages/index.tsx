@@ -24,7 +24,7 @@ import { createUrqlClient } from '../utils/createUrqlClient'
 const Index = () => {
   const [{ data }] = usePostsQuery()
   return (
-    <Layout title='Home'>
+    <Layout title='Home' variant='regular'>
       <div>
         <h2>Hello world!</h2>
         <br />

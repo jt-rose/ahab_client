@@ -18,40 +18,38 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({}) => {
   const [complete, setComplete] = useState(false)
   const [, forgotPassword] = useForgotPasswordMutation()
   return (
-    <Layout title='login'>
-      <Wrapper variant='small'>
-        <Formik
-          initialValues={{ email: '' }}
-          onSubmit={async (values) => {
-            await forgotPassword(values)
-            setComplete(true)
-          }}
-        >
-          {({ isSubmitting }) =>
-            complete ? (
-              <Box>A reset password link has been sent to you</Box>
-            ) : (
-              <Form>
-                <InputField
-                  name='email'
-                  placeholder='email'
-                  label='Email'
-                  type='email'
-                />
+    <Layout title='login' variant='small'>
+      <Formik
+        initialValues={{ email: '' }}
+        onSubmit={async (values) => {
+          await forgotPassword(values)
+          setComplete(true)
+        }}
+      >
+        {({ isSubmitting }) =>
+          complete ? (
+            <Box>A reset password link has been sent to you</Box>
+          ) : (
+            <Form>
+              <InputField
+                name='email'
+                placeholder='email'
+                label='Email'
+                type='email'
+              />
 
-                <Button
-                  mt={4}
-                  colorScheme='teal'
-                  type='submit'
-                  isLoading={isSubmitting}
-                >
-                  Forgot Password
-                </Button>
-              </Form>
-            )
-          }
-        </Formik>
-      </Wrapper>
+              <Button
+                mt={4}
+                colorScheme='teal'
+                type='submit'
+                isLoading={isSubmitting}
+              >
+                Forgot Password
+              </Button>
+            </Form>
+          )
+        }
+      </Formik>
     </Layout>
   )
 }
