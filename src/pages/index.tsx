@@ -21,7 +21,8 @@ import { withUrqlClient } from 'next-urql'
 import { usePostsQuery } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import NextLink from 'next/link'
-import { Link } from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Link, Stack, Text } from '@chakra-ui/react'
+import React from 'react'
 
 const limitVariable = {
   variables: {
@@ -30,22 +31,43 @@ const limitVariable = {
 }
 
 const Index = () => {
-  const [{ data }] = usePostsQuery(limitVariable)
+  const [{ data, fetching }] = usePostsQuery(limitVariable)
+
+  if (!data && !fetching) {
+    return <div>Query failed</div>
+  }
   return (
     <Layout title='Home' variant='regular'>
-      <NextLink href='/create-post'>
-        <Link>Create Post</Link>
-      </NextLink>
+      <Flex>
+        <Heading>Ahab</Heading>
+        <NextLink href='/create-post'>
+          <Link ml='auto'>Create Post</Link>
+        </NextLink>
+      </Flex>
       <br />
-      <div>
-        <h2>Hello world!</h2>
-        <br />
-        <ul>
-          {data?.posts.map((p, i) => (
-            <li key={p.title + '-' + i}>{p.title}</li>
-          ))}
-        </ul>
-      </div>
+
+      {!data && fetching ? (
+        <div>loading...</div>
+      ) : (
+        <>
+          <Stack spacing={8}>
+            {data?.posts.map((post, i) => (
+              <Box key={post.id} p={5} shadow='md' borderWidth='1px'>
+                <Heading fontSize='xl'>{post.title}</Heading>
+                <Text mt={4}>{post.textSnippet}</Text>
+              </Box>
+            ))}
+          </Stack>
+          <br />
+        </>
+      )}
+      {data && (
+        <Flex>
+          <Button my={8} m='auto'>
+            load more
+          </Button>
+        </Flex>
+      )}
     </Layout>
   )
 }
