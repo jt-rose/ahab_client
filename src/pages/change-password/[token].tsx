@@ -1,6 +1,5 @@
 import { Box, Button, Flex, Link } from '@chakra-ui/react'
 import { Formik, Form } from 'formik'
-import { NextPage } from 'next'
 import { withUrqlClient } from 'next-urql'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
@@ -11,18 +10,7 @@ import { createUrqlClient } from '../../utils/createUrqlClient'
 import { toErrorMap } from '../../utils/toErrorMap'
 import NextLink from 'next/link'
 
-interface PropsWthToken {
-  token?: string
-}
-
-const ChangePassword: NextPage<PropsWthToken> = ({ token }) => {
-  if (!token)
-    return (
-      <div>
-        Uh-oh! It looks like you may have followed a bad link. Please resend the
-        email to reset your password and use the link sent to you.
-      </div>
-    )
+const ChangePassword = () => {
   const router = useRouter()
   const [, changePassword] = useChangePasswordMutation()
   const [tokenError, setTokenError] = useState('')
@@ -32,6 +20,8 @@ const ChangePassword: NextPage<PropsWthToken> = ({ token }) => {
         initialValues={{ newPassword: '' }}
         onSubmit={async (values, { setErrors }) => {
           const { newPassword } = values
+          const token =
+            typeof router.query.token === 'string' ? router.query.token : ''
           const res = await changePassword({ token, newPassword })
           const errors = res.data?.changePassword.errors
           if (errors) {
@@ -80,12 +70,6 @@ const ChangePassword: NextPage<PropsWthToken> = ({ token }) => {
       </Formik>
     </Layout>
   )
-}
-
-ChangePassword.getInitialProps = ({ query }) => {
-  return {
-    token: query.token as string,
-  }
 }
 
 export default withUrqlClient(createUrqlClient)(ChangePassword)
