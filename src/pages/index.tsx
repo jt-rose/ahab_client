@@ -23,8 +23,14 @@ import { createUrqlClient } from '../utils/createUrqlClient'
 import NextLink from 'next/link'
 import { Link } from '@chakra-ui/react'
 
+const limitVariable = {
+  variables: {
+    limit: 10,
+  },
+}
+
 const Index = () => {
-  const [{ data }] = usePostsQuery()
+  const [{ data }] = usePostsQuery(limitVariable)
   return (
     <Layout title='Home' variant='regular'>
       <NextLink href='/create-post'>
