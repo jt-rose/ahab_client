@@ -17,7 +17,7 @@ export type Scalars = {
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
-  posts: Array<Post>;
+  posts: PaginatedPosts;
   post?: Maybe<Post>;
   fetchUser?: Maybe<User>;
 };
@@ -31,6 +31,12 @@ export type QueryPostsArgs = {
 
 export type QueryPostArgs = {
   id: Scalars['Float'];
+};
+
+export type PaginatedPosts = {
+  __typename?: 'PaginatedPosts';
+  posts: Array<Post>;
+  hasMore: Scalars['Boolean'];
 };
 
 export type Post = {
@@ -238,10 +244,14 @@ export type PostsQueryVariables = Exact<{
 
 export type PostsQuery = (
   { __typename?: 'Query' }
-  & { posts: Array<(
-    { __typename?: 'Post' }
-    & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'textSnippet'>
-  )> }
+  & { posts: (
+    { __typename?: 'PaginatedPosts' }
+    & Pick<PaginatedPosts, 'hasMore'>
+    & { posts: Array<(
+      { __typename?: 'Post' }
+      & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'textSnippet'>
+    )> }
+  ) }
 );
 
 export const RegularErrorFragmentDoc = gql`
@@ -349,11 +359,14 @@ export function useFetchUserQuery(options: Omit<Urql.UseQueryArgs<FetchUserQuery
 export const PostsDocument = gql`
     query Posts($limit: Int!, $cursor: String) {
   posts(limit: $limit, cursor: $cursor) {
-    id
-    createdAt
-    updatedAt
-    title
-    textSnippet
+    posts {
+      id
+      createdAt
+      updatedAt
+      title
+      textSnippet
+    }
+    hasMore
   }
 }
     `;

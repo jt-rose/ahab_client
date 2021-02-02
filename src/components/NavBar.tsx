@@ -19,9 +19,9 @@ const SignInLinks = () => (
 
 const SignOut = (props: { username: string }) => {
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation()
-  const [{ data, fetching }] = useFetchUserQuery({
+  const [{ data, fetching }] = useFetchUserQuery(/*{
     pause: isServer(),
-  })
+  }*/)
 
   return (
     <Flex>
@@ -38,7 +38,11 @@ const SignOut = (props: { username: string }) => {
 }
 
 export const NavBar: React.FC<NavBarProps> = ({}) => {
-  const [{ data, fetching }] = useFetchUserQuery()
+  const [
+    { data, fetching },
+  ] = useFetchUserQuery(/*{
+    requestPolicy: 'network-only',
+  }*/)
   const username = data?.fetchUser?.username
 
   return (
