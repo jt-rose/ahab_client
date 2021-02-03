@@ -4,6 +4,7 @@ import { usePostsQuery } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import NextLink from 'next/link'
 import { Box, Button, Flex, Heading, Link, Stack, Text } from '@chakra-ui/react'
+import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons'
 import React, { useState } from 'react'
 
 interface CursorVariables {
@@ -41,11 +42,23 @@ const Index = () => {
         <>
           <Stack spacing={8}>
             {data!.posts.posts.map((post, i) => (
-              <Box key={post.id} p={5} shadow='md' borderWidth='1px'>
-                <Heading fontSize='xl'>{post.title}</Heading>{' '}
-                <Text>posted by {post.creator.username}</Text>
-                <Text mt={4}>{post.textSnippet}</Text>
-              </Box>
+              <Flex key={post.id} p={5} shadow='md' borderWidth='1px'>
+                <Flex
+                  direction='column'
+                  justifyContent='center'
+                  alignItems='center'
+                  mr={8}
+                >
+                  <ChevronUpIcon size='24px' />
+                  {post.points}
+                  <ChevronDownIcon size='24px' />
+                </Flex>
+                <Box>
+                  <Heading fontSize='xl'>{post.title}</Heading>
+                  <Text>posted by {post.creator.username}</Text>
+                  <Text mt={4}>{post.textSnippet}</Text>
+                </Box>
+              </Flex>
             ))}
           </Stack>
           <br />

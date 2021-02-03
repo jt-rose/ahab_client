@@ -257,7 +257,7 @@ export type PostsQuery = (
     & Pick<PaginatedPosts, 'hasMore'>
     & { posts: Array<(
       { __typename?: 'Post' }
-      & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'textSnippet'>
+      & Pick<Post, 'id' | 'createdAt' | 'updatedAt' | 'title' | 'textSnippet' | 'points'>
       & { creator: (
         { __typename?: 'User' }
         & Pick<User, 'id' | 'username'>
@@ -378,6 +378,7 @@ export const PostsDocument = gql`
       updatedAt
       title
       textSnippet
+      points
       creator {
         id
         username
