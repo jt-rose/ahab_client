@@ -29,10 +29,8 @@ export const errorExchange: Exchange = ({ forward }) => (ops$) => {
 export const cursorPagination = (): Resolver => {
   return (_parent, fieldArgs, cache, info) => {
     const { parentKey: entityKey, fieldName } = info
-    console.log(entityKey, fieldName)
 
     const allFields = cache.inspectFields(entityKey)
-    console.log('allFields: ', allFields)
     const fieldInfos = allFields.filter((info) => info.fieldName === fieldName)
     const size = fieldInfos.length
     if (size === 0) {
@@ -137,6 +135,21 @@ export const createUrqlClient = (ssrExchange: any) => ({
       },
       updates: {
         Mutation: {
+          createPost: (_result, args, cache, info) => {
+            /*const allFields = cache.inspectFields('Query')
+            const fieldInfos = allFields.filter(
+              (field) => field.fieldName === 'posts'
+            )
+            fieldInfos.forEach((fi) => {
+              cache.invalidate('Query', 'posts', fi.arguments || {})
+            })
+            */
+            console.log('before: ', cache.inspectFields('Query'))
+            cache.invalidate('Query', 'posts', {
+              limit: 10,
+            })
+            console.log('after: ', cache.inspectFields('Query'))
+          },
           logout: (_result, args, cache, info) => {
             betterUpdateQuery<LogoutMutation, FetchUserQuery>(
               cache,

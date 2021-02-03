@@ -40,8 +40,11 @@ const Index = () => {
     limit: 10,
     cursor: null,
   })
-  const [{ data, fetching }] = usePostsQuery({ variables })
-  console.log(data)
+  const [{ data, fetching }] = usePostsQuery({
+    variables,
+    //requestPolicy: 'cache-and-network',
+    // cache issues, default to cache and network for now
+  })
 
   if (!data && !fetching) {
     return <div>Query failed</div>
