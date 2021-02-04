@@ -8,15 +8,17 @@ interface UpdootSectionProps {
 }
 
 export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
-  const { points, id } = post
+  const { points, id, voteStatus } = post
   const [, vote] = useVoteMutation() // update cache?
   return (
     <Flex direction='column' justifyContent='center' alignItems='center' mr={8}>
       <IconButton
         aria-label='vote up'
         icon={<ChevronUpIcon />}
+        colorScheme={voteStatus === 1 ? 'green' : undefined}
         size='24px'
         onClick={() => {
+          if (voteStatus === 1) return
           vote({
             postId: id,
             value: 1,
@@ -28,7 +30,9 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
         aria-label='vote down'
         icon={<ChevronDownIcon />}
         size='24px'
+        colorScheme={voteStatus === -1 ? 'red' : undefined}
         onClick={() => {
+          if (voteStatus === -1) return
           vote({
             postId: id,
             value: -1,

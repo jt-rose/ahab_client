@@ -141,22 +141,26 @@ export const createUrqlClient = (ssrExchange: any) => ({
             const { postId, value } = args as VoteMutationVariables
             const data = cache.readFragment(
               gql`
-                fragment _ on Post {
+                fragment __ on Post {
                   id
                   points
+                  voteStatus
                 }
               `,
               { id: postId } as any
             )
             if (data) {
-              const newPoints = (data.points as number) + value
+              if (data.voteStatus === value) return
+              const newPoints =
+                (data.points as number) + (!data.voteStatus ? 1 : 2) * value
               cache.writeFragment(
                 gql`
-                  fragment _ on Post {
+                  fragment __ on Post {
                     points
+                    voteStatus
                   }
                 `,
-                { id: postId, points: newPoints }
+                { id: postId, points: newPoints, voteStatus: value }
               )
             }
           },
