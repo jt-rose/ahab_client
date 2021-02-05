@@ -120,10 +120,14 @@ export const cursorPagination = (): Resolver => {
 
 // create urql client
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
-  let cookie = ''
-  if (isServer()) {
+  const cookie = ctx?.req?.headers?.cookie ?? ''
+  // seems to be a bug with ssr-prepass losing the ctx on client render
+  // switch to nullish coalescing op for now
+
+  /*if (isServer()) {
+    console.log('ctx: ', ctx.req.headers.cookie)
     cookie = ctx.req.headers.cookie
-  }
+  }*/
   return {
     url: 'http://localhost:5000/graphql',
     fetchOptions: {
