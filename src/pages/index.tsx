@@ -29,9 +29,11 @@ const Index = () => {
   return (
     <Layout title='Home' variant='regular'>
       <Flex>
-        <Heading>Ahab</Heading>
+        <Heading>Posts</Heading>
         <NextLink href='/create-post'>
-          <Link ml='auto'>Create Post</Link>
+          <Button as={Link} ml='auto'>
+            Create Post
+          </Button>
         </NextLink>
       </Flex>
       <br />

@@ -1,4 +1,4 @@
-import { Flex, Link, Box, Button } from '@chakra-ui/react'
+import { Flex, Link, Box, Button, Heading } from '@chakra-ui/react'
 import { withUrqlClient } from 'next-urql'
 import NextLink from 'next/link'
 import React from 'react'
@@ -30,7 +30,19 @@ const NavBarUC: React.FC<NavBarProps> = ({}) => {
   const username = data?.fetchUser?.username
 
   return (
-    <Flex position='sticky' top={0} zIndex={1} bg='tan' p={4}>
+    <Flex
+      alignItems='center'
+      position='sticky'
+      top={0}
+      zIndex={1}
+      bg='tan'
+      p={4}
+    >
+      <NextLink href='/'>
+        <Link>
+          <Heading>Ahab</Heading>
+        </Link>
+      </NextLink>
       <Box ml={'auto'}>
         {username ? (
           <Flex>
