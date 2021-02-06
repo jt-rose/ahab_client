@@ -15,7 +15,7 @@ const CreatePost = () => {
   useIsAuth()
   const [, createPost] = useCreatePostMutation()
   return (
-    <Layout title='login' variant='small'>
+    <Layout title='create post' variant='small'>
       <Formik
         initialValues={{ title: '', text: '' }}
         onSubmit={async (values, {}) => {

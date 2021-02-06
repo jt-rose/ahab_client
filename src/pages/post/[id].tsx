@@ -1,21 +1,12 @@
 import { withUrqlClient } from 'next-urql'
-import { useRouter } from 'next/router'
 import React from 'react'
 import { createUrqlClient } from '../../utils/createUrqlClient'
-import { usePostQuery } from '../../generated/graphql'
 import { Layout } from '../../components/Layout'
 import { Heading } from '@chakra-ui/react'
+import { useGetPostFromUrl } from '../../utils/useGetPostFromUrl'
 
 const Post: React.FC = () => {
-  const router = useRouter()
-  const { id } = router.query
-  const parsedId = typeof id === 'string' ? parseInt(id) : -1
-  const [{ data, fetching, error }] = usePostQuery({
-    pause: parsedId === -1,
-    variables: {
-      id: parsedId,
-    },
-  })
+  const [{ data, fetching, error }] = useGetPostFromUrl()
 
   if (error) {
     return <div>Error! {error.message}</div>
