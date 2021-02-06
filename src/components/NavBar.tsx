@@ -5,6 +5,7 @@ import React from 'react'
 import { useFetchUserQuery, useLogoutMutation } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import { isServer } from '../utils/isServer'
+import { useRouter } from 'next/router'
 
 interface NavBarProps {}
 
@@ -20,12 +21,9 @@ const SignInLinks = () => (
 )
 
 const NavBarUC: React.FC<NavBarProps> = ({}) => {
-  const [
-    { data, fetching },
-  ] = useFetchUserQuery(/*{
-    requestPolicy: 'cache-and-network',
-    // cache issues, default to network and cache for now
-  }*/)
+  const router = useRouter()
+  const [{ data, fetching }] = useFetchUserQuery()
+  //{pause: isServer()}
   const [{ fetching: logoutFetching }, logout] = useLogoutMutation()
   const username = data?.fetchUser?.username
 
@@ -49,7 +47,10 @@ const NavBarUC: React.FC<NavBarProps> = ({}) => {
             <Box mr={2}>{username}</Box>
             <Button
               variant='link'
-              onClick={() => logout()}
+              onClick={async () => {
+                await logout()
+                router.reload()
+              }}
               isLoading={logoutFetching}
             >
               logout
