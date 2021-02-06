@@ -7,19 +7,10 @@ import {
 } from '../generated/graphql'
 import { createUrqlClient } from '../utils/createUrqlClient'
 import NextLink from 'next/link'
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  IconButton,
-  Link,
-  Stack,
-  Text,
-} from '@chakra-ui/react'
+import { Box, Button, Flex, Heading, Link, Stack, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { UpdootSection } from '../components/UpdootSection'
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons'
+import { EditDeletePostButtons } from '../components/EditDeletePostButtons'
 
 interface CursorVariables {
   limit: number
@@ -36,8 +27,7 @@ const Index = () => {
     //requestPolicy: 'cache-and-network',
     // cache issues, default to cache and network for now
   })
-  const [, deletePost] = useDeletePostMutation()
-  const [{ data: fetchUserData }] = useFetchUserQuery()
+  const [] = useDeletePostMutation()
 
   if (!data && !fetching) {
     return <div>Query failed</div>
@@ -59,7 +49,7 @@ const Index = () => {
       ) : (
         <>
           <Stack spacing={8}>
-            {data!.posts.posts.map((post, i) =>
+            {data!.posts.posts.map((post) =>
               !post ? null : (
                 <Flex key={post.id} p={5} shadow='md' borderWidth='1px'>
                   <UpdootSection post={post} />
@@ -75,25 +65,11 @@ const Index = () => {
                       <Text flex={1} mt={4}>
                         {post.textSnippet}
                       </Text>
-                      {fetchUserData?.fetchUser?.id === post.creator.id && (
-                        <Box ml='auto'>
-                          <NextLink
-                            href='post/edit/[id]'
-                            as={`post/edit/${post.id}`}
-                          >
-                            <IconButton
-                              mr={4}
-                              icon={<EditIcon />}
-                              aria-label='edit post'
-                            />
-                          </NextLink>
-                          <IconButton
-                            icon={<DeleteIcon />}
-                            aria-label='delete post'
-                            onClick={() => deletePost({ id: post.id })}
-                          />
-                        </Box>
-                      )}
+
+                      <EditDeletePostButtons
+                        id={post.id}
+                        creatorId={post.creator.id}
+                      />
                     </Flex>
                   </Box>
                 </Flex>
