@@ -22,7 +22,7 @@ const Index = () => {
     limit: 10,
     cursor: null,
   })
-  const [{ data, fetching }] = usePostsQuery({
+  const [{ data, error, fetching }] = usePostsQuery({
     variables,
     //requestPolicy: 'cache-and-network',
     // cache issues, default to cache and network for now
@@ -30,7 +30,7 @@ const Index = () => {
   const [] = useDeletePostMutation()
 
   if (!data && !fetching) {
-    return <div>Query failed</div>
+    return <div>Query failed: {error?.message}</div>
   }
   return (
     <Layout title='Home' variant='regular'>
