@@ -17,8 +17,8 @@ const Index = () => {
       limit: 10,
       cursor: null,
     },
-    //requestPolicy: 'cache-and-network',
-    // cache issues, default to cache and network for now
+    notifyOnNetworkStatusChange: true, // updates loading after initial call,
+    // that is, when hitting the load more button
   })
 
   if (!data && !loading) {
@@ -83,7 +83,7 @@ const Index = () => {
                   cursor:
                     data.posts.posts[data.posts.posts.length - 1].createdAt,
                 },
-                updateQuery: (
+                /*updateQuery: (
                   previousValue,
                   { fetchMoreResult }
                 ): PostsQuery => {
@@ -102,7 +102,7 @@ const Index = () => {
                       ],
                     },
                   }
-                },
+                },*/
               })
             }}
             isLoading={loading}
