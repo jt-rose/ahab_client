@@ -9,7 +9,7 @@ interface UpdootSectionProps {
 
 export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
   const { points, id, voteStatus } = post
-  const [, vote] = useVoteMutation() // update cache?
+  const [vote] = useVoteMutation() // update cache?
   return (
     <Flex direction='column' justifyContent='center' alignItems='center' mr={8}>
       <IconButton
@@ -20,8 +20,10 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
         onClick={() => {
           if (voteStatus === 1) return
           vote({
-            postId: id,
-            value: 1,
+            variables: {
+              postId: id,
+              value: 1,
+            },
           })
         }}
       />
@@ -34,8 +36,10 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
         onClick={() => {
           if (voteStatus === -1) return
           vote({
-            postId: id,
-            value: -1,
+            variables: {
+              postId: id,
+              value: -1,
+            },
           })
         }}
       />

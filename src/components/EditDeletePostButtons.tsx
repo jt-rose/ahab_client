@@ -9,8 +9,8 @@ export const EditDeletePostButtons = (props: {
   creatorId: number
 }) => {
   const { id, creatorId } = props
-  const [{ data }] = useFetchUserQuery()
-  const [, deletePost] = useDeletePostMutation()
+  const { data } = useFetchUserQuery()
+  const [deletePost] = useDeletePostMutation()
 
   if (data?.fetchUser?.id !== creatorId) {
     return null
@@ -23,7 +23,7 @@ export const EditDeletePostButtons = (props: {
         <IconButton
           icon={<DeleteIcon />}
           aria-label='delete post'
-          onClick={() => deletePost({ id })}
+          onClick={() => deletePost({ variables: { id } })}
         />
       </Box>
     )

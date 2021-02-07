@@ -5,8 +5,6 @@ import { Box, Button, Flex, Link } from '@chakra-ui/react'
 import { useLoginMutation } from '../generated/graphql'
 import { toErrorMap } from '../utils/toErrorMap'
 import { useRouter } from 'next/router'
-import { withUrqlClient } from 'next-urql'
-import { createUrqlClient } from '../utils/createUrqlClient'
 import { Layout } from '../components/Layout'
 import NextLink from 'next/link'
 
@@ -14,14 +12,14 @@ interface registerProps {}
 
 const Login: React.FC<registerProps> = ({}) => {
   const router = useRouter()
-  const [loadStatus, login] = useLoginMutation()
+  const [login] = useLoginMutation()
   return (
     <Layout title='login' variant='small'>
       <Formik
         initialValues={{ usernameOrEmail: '', password: '' }}
         onSubmit={async (values, { setErrors }) => {
           console.log(values)
-          const res = await login(values)
+          const res = await login({ variables: { ...values } })
           const errors = res.data?.login.errors
           if (errors) {
             setErrors(toErrorMap(errors))
@@ -72,4 +70,4 @@ const Login: React.FC<registerProps> = ({}) => {
   )
 }
 
-export default withUrqlClient(createUrqlClient)(Login)
+export default Login

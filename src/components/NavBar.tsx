@@ -1,9 +1,7 @@
 import { Flex, Link, Box, Button, Heading } from '@chakra-ui/react'
-import { withUrqlClient } from 'next-urql'
 import NextLink from 'next/link'
 import React from 'react'
 import { useFetchUserQuery, useLogoutMutation } from '../generated/graphql'
-import { createUrqlClient } from '../utils/createUrqlClient'
 import { isServer } from '../utils/isServer'
 import { useRouter } from 'next/router'
 
@@ -20,11 +18,11 @@ const SignInLinks = () => (
   </>
 )
 
-const NavBarUC: React.FC<NavBarProps> = ({}) => {
+export const NavBar: React.FC<NavBarProps> = ({}) => {
   const router = useRouter()
-  const [{ data, fetching }] = useFetchUserQuery()
-  //{pause: isServer()}
-  const [{ fetching: logoutFetching }, logout] = useLogoutMutation()
+  const { data } = useFetchUserQuery()
+  //{skip: isServer()}
+  const [logout, { loading }] = useLogoutMutation()
   const username = data?.fetchUser?.username
 
   return (
@@ -51,7 +49,7 @@ const NavBarUC: React.FC<NavBarProps> = ({}) => {
                 await logout()
                 router.reload()
               }}
-              isLoading={logoutFetching}
+              isLoading={loading}
             >
               logout
             </Button>
@@ -63,5 +61,3 @@ const NavBarUC: React.FC<NavBarProps> = ({}) => {
     </Flex>
   )
 }
-
-export const NavBar = withUrqlClient(createUrqlClient)(NavBarUC)

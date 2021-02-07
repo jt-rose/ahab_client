@@ -1,11 +1,5 @@
 import { Layout } from '../components/Layout'
-import { withUrqlClient } from 'next-urql'
-import {
-  usePostsQuery,
-  useDeletePostMutation,
-  useFetchUserQuery,
-} from '../generated/graphql'
-import { createUrqlClient } from '../utils/createUrqlClient'
+import { usePostsQuery } from '../generated/graphql'
 import NextLink from 'next/link'
 import { Box, Button, Flex, Heading, Link, Stack, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
@@ -22,14 +16,13 @@ const Index = () => {
     limit: 10,
     cursor: null,
   })
-  const [{ data, error, fetching }] = usePostsQuery({
+  const { data, error, loading } = usePostsQuery({
     variables,
     //requestPolicy: 'cache-and-network',
     // cache issues, default to cache and network for now
   })
-  const [] = useDeletePostMutation()
 
-  if (!data && !fetching) {
+  if (!data && !loading) {
     return <div>Query failed: {error?.message}</div>
   }
   return (
@@ -44,7 +37,7 @@ const Index = () => {
       </Flex>
       <br />
 
-      {!data && fetching ? (
+      {!data && loading ? (
         <div>loading...</div>
       ) : (
         <>
@@ -90,7 +83,7 @@ const Index = () => {
                 cursor: data.posts.posts[data.posts.posts.length - 1].createdAt,
               })
             }}
-            isLoading={fetching}
+            isLoading={loading}
           >
             load more
           </Button>
@@ -100,4 +93,4 @@ const Index = () => {
   )
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Index)
+export default Index

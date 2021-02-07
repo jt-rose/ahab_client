@@ -1,10 +1,8 @@
 import { Box, Button } from '@chakra-ui/react'
 import { Formik, Form } from 'formik'
-import { withUrqlClient } from 'next-urql'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { InputField } from '../components/InputField'
 import { Layout } from '../components/Layout'
-import { createUrqlClient } from '../utils/createUrqlClient'
 import { useCreatePostMutation } from '../generated/graphql'
 import { useRouter } from 'next/router'
 import { useIsAuth } from '../utils/useIsAuth'
@@ -13,14 +11,14 @@ import { useIsAuth } from '../utils/useIsAuth'
 const CreatePost = () => {
   const router = useRouter()
   useIsAuth()
-  const [, createPost] = useCreatePostMutation()
+  const [createPost] = useCreatePostMutation()
   return (
     <Layout title='create post' variant='small'>
       <Formik
         initialValues={{ title: '', text: '' }}
         onSubmit={async (values, {}) => {
-          const { error } = await createPost(values)
-          if (!error) {
+          const { errors } = await createPost({ variables: { ...values } })
+          if (!errors) {
             router.push('/')
           }
         }}
@@ -52,4 +50,4 @@ const CreatePost = () => {
   )
 }
 
-export default withUrqlClient(createUrqlClient)(CreatePost)
+export default CreatePost

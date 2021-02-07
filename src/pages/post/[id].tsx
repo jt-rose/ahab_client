@@ -1,18 +1,16 @@
-import { withUrqlClient } from 'next-urql'
 import React from 'react'
-import { createUrqlClient } from '../../utils/createUrqlClient'
 import { Layout } from '../../components/Layout'
 import { Box, Heading } from '@chakra-ui/react'
 import { useGetPostFromUrl } from '../../utils/useGetPostFromUrl'
 import { EditDeletePostButtons } from '../../components/EditDeletePostButtons'
 
 const Post: React.FC = () => {
-  const [{ data, fetching, error }] = useGetPostFromUrl()
+  const { data, loading, error } = useGetPostFromUrl()
 
   if (error) {
     return <div>Error! {error.message}</div>
   }
-  if (fetching) {
+  if (loading) {
     return (
       <Layout variant='regular'>
         <div>loading...</div>
@@ -41,4 +39,4 @@ const Post: React.FC = () => {
   )
 }
 
-export default withUrqlClient(createUrqlClient, { ssr: true })(Post)
+export default Post

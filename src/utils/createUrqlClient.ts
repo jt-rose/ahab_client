@@ -1,4 +1,4 @@
-import {
+/*import {
   DeletePostMutationVariables,
   VoteMutationVariables,
 } from './../generated/graphql'
@@ -87,6 +87,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
     console.log('ctx: ', ctx.req.headers.cookie)
     cookie = ctx.req.headers.cookie
   }*/
+/*
   return {
     url: 'http://localhost:5000/graphql',
     fetchOptions: {
@@ -146,10 +147,11 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             },
             createPost: (_result, args, cache, info) => {
               invalidateAllPosts(cache)
-
-              /*cache.invalidate('Query', 'posts', {
+*/
+/*cache.invalidate('Query', 'posts', {
               limit: 10, // must match amount of original cached
             })*/
+/*
             },
             logout: (_result, args, cache, info) => {
               betterUpdateQuery<LogoutMutation, FetchUserQuery>(
@@ -198,3 +200,5 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
     ],
   }
 }
+*/
+export const throwaway = null

@@ -5,22 +5,20 @@ import { Box, Button } from '@chakra-ui/react'
 import { useRegisterMutation } from '../generated/graphql'
 import { toErrorMap } from '../utils/toErrorMap'
 import { useRouter } from 'next/router'
-import { withUrqlClient } from 'next-urql'
-import { createUrqlClient } from '../utils/createUrqlClient'
 import { Layout } from '../components/Layout'
 
 interface registerProps {}
 
 const Register: React.FC<registerProps> = ({}) => {
   const router = useRouter()
-  const [loadStatus, register] = useRegisterMutation()
+  const [register] = useRegisterMutation()
   return (
     <Layout title='register' variant='small'>
       <Formik
         initialValues={{ username: '', password: '', email: '' }}
         onSubmit={async (values, { setErrors }) => {
           console.log(values)
-          const res = await register({ ...values })
+          const res = await register({ variables: { ...values } })
           const errors = res.data?.register.errors
           if (errors) {
             setErrors(toErrorMap(errors))
@@ -63,4 +61,4 @@ const Register: React.FC<registerProps> = ({}) => {
   )
 }
 
-export default withUrqlClient(createUrqlClient)(Register)
+export default Register
