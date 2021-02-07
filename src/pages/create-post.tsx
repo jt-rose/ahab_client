@@ -6,6 +6,7 @@ import { Layout } from '../components/Layout'
 import { useCreatePostMutation } from '../generated/graphql'
 import { useRouter } from 'next/router'
 import { useIsAuth } from '../utils/useIsAuth'
+import { withApollo } from '../utils/withApollo'
 
 // note: in real app, add loading spinner while fetching for ux
 const CreatePost = () => {
@@ -50,4 +51,4 @@ const CreatePost = () => {
   )
 }
 
-export default CreatePost
+export default withApollo({ ssr: false })(CreatePost)

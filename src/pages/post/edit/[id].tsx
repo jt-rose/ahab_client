@@ -6,6 +6,7 @@ import { Layout } from '../../../components/Layout'
 import { usePostQuery, useUpdatePostMutation } from '../../../generated/graphql'
 import { useGetFormattedPostId } from '../../../utils/useGetFormattedPostId'
 import { useIsAuth } from '../../../utils/useIsAuth'
+import { withApollo } from '../../../utils/withApollo'
 
 const EditPost = () => {
   useIsAuth()
@@ -75,4 +76,4 @@ const EditPost = () => {
   )
 }
 
-export default EditPost
+export default withApollo({ ssr: false })(EditPost)

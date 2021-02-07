@@ -5,6 +5,7 @@ import { Box, Button, Flex, Heading, Link, Stack, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
 import { UpdootSection } from '../components/UpdootSection'
 import { EditDeletePostButtons } from '../components/EditDeletePostButtons'
+import { withApollo } from '../utils/withApollo'
 
 interface CursorVariables {
   limit: number
@@ -115,4 +116,4 @@ const Index = () => {
   )
 }
 
-export default Index
+export default withApollo({ ssr: true })(Index)
