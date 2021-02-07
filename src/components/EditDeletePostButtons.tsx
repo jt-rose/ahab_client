@@ -23,7 +23,14 @@ export const EditDeletePostButtons = (props: {
         <IconButton
           icon={<DeleteIcon />}
           aria-label='delete post'
-          onClick={() => deletePost({ variables: { id } })}
+          onClick={() =>
+            deletePost({
+              variables: { id },
+              update: (cache) => {
+                cache.evict({ id: 'Post:' + id })
+              },
+            })
+          }
         />
       </Box>
     )
