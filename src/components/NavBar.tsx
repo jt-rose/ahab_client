@@ -4,6 +4,7 @@ import React from 'react'
 import { useFetchUserQuery, useLogoutMutation } from '../generated/graphql'
 import { isServer } from '../utils/isServer'
 import { useRouter } from 'next/router'
+import { useApolloClient } from '@apollo/client'
 
 interface NavBarProps {}
 
@@ -21,6 +22,7 @@ const SignInLinks = () => (
 export const NavBar: React.FC<NavBarProps> = ({}) => {
   const router = useRouter()
   const { data } = useFetchUserQuery()
+  const apolloClient = useApolloClient()
   //{skip: isServer()}
   const [logout, { loading }] = useLogoutMutation()
   const username = data?.fetchUser?.username
@@ -47,7 +49,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
               variant='link'
               onClick={async () => {
                 await logout()
-                router.reload()
+                await apolloClient.resetStore()
               }}
               isLoading={loading}
             >

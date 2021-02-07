@@ -1,5 +1,5 @@
 import { Layout } from '../components/Layout'
-import { usePostsQuery } from '../generated/graphql'
+import { PostsQuery, usePostsQuery } from '../generated/graphql'
 import NextLink from 'next/link'
 import { Box, Button, Flex, Heading, Link, Stack, Text } from '@chakra-ui/react'
 import React, { useState } from 'react'
@@ -12,12 +12,11 @@ interface CursorVariables {
 }
 
 const Index = () => {
-  const [variables, setVariables] = useState<CursorVariables>({
-    limit: 10,
-    cursor: null,
-  })
-  const { data, error, loading } = usePostsQuery({
-    variables,
+  const { data, error, loading, fetchMore, variables } = usePostsQuery({
+    variables: {
+      limit: 10,
+      cursor: null,
+    },
     //requestPolicy: 'cache-and-network',
     // cache issues, default to cache and network for now
   })
@@ -78,9 +77,32 @@ const Index = () => {
             my={8}
             m='auto'
             onClick={() => {
-              setVariables({
-                limit: variables.limit,
-                cursor: data.posts.posts[data.posts.posts.length - 1].createdAt,
+              fetchMore({
+                variables: {
+                  limit: variables?.limit,
+                  cursor:
+                    data.posts.posts[data.posts.posts.length - 1].createdAt,
+                },
+                updateQuery: (
+                  previousValue,
+                  { fetchMoreResult }
+                ): PostsQuery => {
+                  if (!fetchMoreResult) {
+                    return previousValue as PostsQuery
+                  }
+
+                  return {
+                    __typename: 'Query',
+                    posts: {
+                      __typename: 'PaginatedPosts',
+                      hasMore: (fetchMoreResult as PostsQuery).posts.hasMore,
+                      posts: [
+                        ...(previousValue as PostsQuery).posts.posts,
+                        ...(fetchMoreResult as PostsQuery).posts.posts,
+                      ],
+                    },
+                  }
+                },
               })
             }}
             isLoading={loading}
