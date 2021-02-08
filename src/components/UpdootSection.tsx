@@ -1,10 +1,50 @@
 import { Flex, IconButton } from '@chakra-ui/react'
 import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons'
-import { PostSnippetFragment } from '../generated/graphql'
+import { PostSnippetFragment, VoteMutation } from '../generated/graphql'
 import { useVoteMutation } from '../generated/graphql'
+import gql from 'graphql-tag'
+import { ApolloCache } from '@apollo/client'
+import { useGetFormattedPostId } from '../utils/useGetFormattedPostId'
 
 interface UpdootSectionProps {
   post: PostSnippetFragment
+}
+
+const updateAfterVote = (
+  value: number,
+  postId: number,
+  cache: ApolloCache<VoteMutation>
+) => {
+  const data = cache.readFragment<{
+    id: string
+    points: number
+    voteStatus: number | null
+  }>({
+    id: 'Post:' + postId,
+    fragment: gql`
+      fragment __ on Post {
+        id
+        points
+        voteStatus
+      }
+    `,
+  })
+
+  if (data) {
+    if (data.voteStatus === value) return
+    const newPoints =
+      (data.points as number) + (!data.voteStatus ? 1 : 2) * value
+    cache.writeFragment({
+      id: 'Post:' + postId,
+      data: { points: newPoints, voteStatus: value },
+      fragment: gql`
+        fragment __ on Post {
+          points
+          voteStatus
+        }
+      `,
+    })
+  }
 }
 
 export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
@@ -24,6 +64,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
               postId: id,
               value: 1,
             },
+            update: (cache) => updateAfterVote(1, post.id, cache),
           })
         }}
       />
@@ -40,6 +81,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
               postId: id,
               value: -1,
             },
+            update: (cache) => updateAfterVote(-1, post.id, cache),
           })
         }}
       />

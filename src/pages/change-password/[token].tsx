@@ -4,7 +4,11 @@ import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import { InputField } from '../../components/InputField'
 import { Layout } from '../../components/Layout'
-import { useChangePasswordMutation } from '../../generated/graphql'
+import {
+  FetchUserDocument,
+  FetchUserQuery,
+  useChangePasswordMutation,
+} from '../../generated/graphql'
 import { toErrorMap } from '../../utils/toErrorMap'
 import NextLink from 'next/link'
 import { withApollo } from '../../utils/withApollo'
@@ -23,6 +27,15 @@ const ChangePassword = () => {
             typeof router.query.token === 'string' ? router.query.token : ''
           const res = await changePassword({
             variables: { token, newPassword },
+            update: (cache, { data }) => {
+              cache.writeQuery<FetchUserQuery>({
+                query: FetchUserDocument,
+                data: {
+                  __typename: 'Query',
+                  fetchUser: data?.changePassword.user,
+                },
+              })
+            },
           })
           const errors = res.data?.changePassword.errors
           if (errors) {

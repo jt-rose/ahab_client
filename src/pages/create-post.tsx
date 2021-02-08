@@ -18,7 +18,10 @@ const CreatePost = () => {
       <Formik
         initialValues={{ title: '', text: '' }}
         onSubmit={async (values, {}) => {
-          const { errors } = await createPost({ variables: { ...values } })
+          const { errors } = await createPost({
+            variables: { ...values },
+            update: (cache) => cache.evict({ fieldName: 'posts' }), // evict 'posts' to evict entire query
+          })
           if (!errors) {
             router.push('/')
           }

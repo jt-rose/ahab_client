@@ -2,7 +2,11 @@ import React from 'react'
 import { Form, Formik } from 'formik'
 import { InputField } from '../components/InputField'
 import { Box, Button } from '@chakra-ui/react'
-import { useRegisterMutation } from '../generated/graphql'
+import {
+  useRegisterMutation,
+  FetchUserQuery,
+  FetchUserDocument,
+} from '../generated/graphql'
 import { toErrorMap } from '../utils/toErrorMap'
 import { useRouter } from 'next/router'
 import { Layout } from '../components/Layout'
@@ -19,7 +23,17 @@ const Register: React.FC<registerProps> = ({}) => {
         initialValues={{ username: '', password: '', email: '' }}
         onSubmit={async (values, { setErrors }) => {
           console.log(values)
-          const res = await register({ variables: { ...values } })
+          const res = await register({
+            variables: { ...values },
+            update: (cache, { data }) =>
+              cache.writeQuery<FetchUserQuery>({
+                query: FetchUserDocument,
+                data: {
+                  __typename: 'Query',
+                  fetchUser: data?.register.user,
+                },
+              }),
+          })
           const errors = res.data?.register.errors
           if (errors) {
             setErrors(toErrorMap(errors))

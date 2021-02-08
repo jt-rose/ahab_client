@@ -2,7 +2,11 @@ import React from 'react'
 import { Form, Formik } from 'formik'
 import { InputField } from '../components/InputField'
 import { Box, Button, Flex, Link } from '@chakra-ui/react'
-import { useLoginMutation } from '../generated/graphql'
+import {
+  FetchUserDocument,
+  FetchUserQuery,
+  useLoginMutation,
+} from '../generated/graphql'
 import { toErrorMap } from '../utils/toErrorMap'
 import { useRouter } from 'next/router'
 import { Layout } from '../components/Layout'
@@ -19,16 +23,26 @@ const Login: React.FC<registerProps> = ({}) => {
       <Formik
         initialValues={{ usernameOrEmail: '', password: '' }}
         onSubmit={async (values, { setErrors }) => {
-          console.log(values)
-          const res = await login({ variables: { ...values } })
-          const errors = res.data?.login.errors
-          if (errors) {
-            setErrors(toErrorMap(errors))
-          } else if (res.data?.login.user) {
+          const response = await login({
+            variables: values,
+            update: (cache, { data }) => {
+              cache.writeQuery<FetchUserQuery>({
+                query: FetchUserDocument,
+                data: {
+                  __typename: 'Query',
+                  fetchUser: data?.login.user,
+                },
+              })
+              cache.evict({ fieldName: 'posts:{}' })
+            },
+          })
+          if (response.data?.login.errors) {
+            setErrors(toErrorMap(response.data.login.errors))
+          } else if (response.data?.login.user) {
             if (typeof router.query.next === 'string') {
-              // in full app, check against string literal routes
               router.push(router.query.next)
             } else {
+              // worked
               router.push('/')
             }
           }
